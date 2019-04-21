@@ -24,4 +24,5 @@ Command line argument:
   >python main.py <p1 strat> <p2 strat> (refer to list above for strategy names)
   
   e.g.
-    > python main.py tft ab || p1 = tit for tat, and p2 = always betray. They will play 100 rounds
+    > "python main.py tft ab" || p1 = tit for tat, and p2 = always betray. They will play 100 rounds
+
