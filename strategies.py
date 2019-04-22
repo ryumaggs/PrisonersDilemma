@@ -108,3 +108,52 @@ class titfortat():
 
 	def record(self,opp_move,my_move):
 		self.opp_history.append(opp_move)
+
+class markov():
+    def __init__(self,max_chain = 20):
+        self.title = "markov"
+        self.opp_history = []
+        self.my_history = []
+        self.max_chain = max_chain
+
+    def decision(self,num = 20):
+
+        # Zip histories together, need to check both opponent's choices and our choices
+        # hist = zip(self.opp_history, self.my_history)
+
+        # Get the previous history to compare against
+        my_prev = self.my_history[-1*num:]
+        opp_prev = self.opp_history[-1*num:]
+        # Keep track of the possible choices. Will be the opponent's choice following the matching pattern
+        choices = []
+
+        # Iterate backwards through the history
+        hist_iter = len(self.my_history) - 2
+        while hist_iter >= 0:
+            i = 0
+
+            # Find matching patterns
+            while i < num and hist_iter-i >= 0:
+                
+                # Pattern found
+                if my_prev[-1*i] == self.my_history[hist_iter-i] and opp_prev[-1*i] == self.opp_history[hist_iter-i]:
+                    # chance of this option being picked is related to how long of a pattern is matched
+                    choices += [self.opp_history[hist_iter + 1]]
+                    i += 1
+                else: 
+                    break
+
+            hist_iter -= 1
+                    
+
+        # Randomly pick next move based on the choices already determined
+        # No patterns found
+        if (len(choices) == 0):
+            my_move = 0
+        else:
+            my_move = random.choice(choices)
+        self.my_history.append(my_move)
+        return my_move
+
+    def record(self, opp_move, my_move):
+        self.opp_history.append(opp_move)
