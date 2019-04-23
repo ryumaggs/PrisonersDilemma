@@ -173,7 +173,7 @@ class markov():
         choices = []
 
         # Iterate backwards through the history
-        hist_iter = len(self.my_history) - 2
+        hist_iter = len(self.opp_history) - 2
         while hist_iter >= 0:
             i = 0
 
@@ -183,7 +183,11 @@ class markov():
                 # Pattern found
                 if my_prev[-1*i] == self.my_history[hist_iter-i] and opp_prev[-1*i] == self.opp_history[hist_iter-i]:
                     # chance of this option being picked is related to how long of a pattern is matched
-                    choices += [self.opp_history[hist_iter + 1]]
+                    try:
+                        choices += [self.opp_history[hist_iter + 1]]
+                    except:
+                        print(self.opp_history, len(self.opp_history),hist_iter)
+
                     i += 1
                 else: 
                     break
