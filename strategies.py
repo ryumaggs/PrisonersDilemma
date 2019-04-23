@@ -157,3 +157,55 @@ class markov():
 
     def record(self, opp_move, my_move):
         self.opp_history.append(opp_move)
+
+class DBS():
+	def __init__(self):
+		self.title = "DBS"
+		self.move_history = []
+		self.outcome_history = []
+		self.opponent_schema = {(0,0): 1,(0,1): 1,(1,0): 0,(1,1): 0}
+		self.cur_opponent_name = ""
+		self.test_phase_counter = 0
+
+	def decision(self):
+		if opponent_name != cur_opponent_name:
+			self.move_history = []
+			self.outcome_history = []
+			self.opponent_schema = {(0,0): 1,(0,1): 1,(1,0): 0,(1,1): 0}
+			self.test_phase_counter = 0
+			return 0
+		else:
+			if self.test_phase_counter < 20:
+				self.test_phase_counter += 1
+				if len(self.move_history) == 0:
+					return 0
+				else:
+					best = 0
+					strat = 0
+					for keys in opponent_schema:
+						if opponent_schema[keys] >= best:
+							best = opponent_schema[keys]
+							strat = keys[1]
+					return strat
+			else:
+				self.test_phase_counter += 1
+				best = 0
+				strat = 0
+				for keys in opponent_schema:
+					if opponent_schema[keys] >= best:
+						best = opponent_schema[keys]
+						strat = keys[1]
+				return strat
+	def record(self,opp_move,my_move):
+		self.move_history.append((opp_move,my_move))
+
+	def update_schema(self,move_history,opponent_schema):
+		alpha = 0.75
+		for keys in opponent_schema:
+			p_k_1_num = 0
+			p_k_1_denom = 0
+			i = 1
+			while(i < len(move_history)):
+				if move_history[i-1][1] = 'C':
+					proportion = i/len(move_history)
+					temp_num = proportion*alpha
