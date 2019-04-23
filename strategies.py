@@ -84,11 +84,11 @@ class repeat():
 
 	def decision(self):
 		if len(self.opp_history) == 0:
-			self.myHistory.append(0)
+			self.my_history.append(0)
 			return 0
 		if self.opp_history[-1] == 0:
-			self.myHistory.append(0)
-			return self.myHistory[-1]
+			self.my_history.append(0)
+			return self.my_history[-1]
 		else:
 			return random.randint(0,1)
 
