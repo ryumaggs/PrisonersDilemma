@@ -44,7 +44,7 @@ def main():
 
 	strats = {'ab':s.alwaysBetray(), 'al':s.alwaysLoyal(), 'tft':s.titfortat(),
 			  'rb':s.randomBetray(), 'grudger':s.grudger(), 'nice':s.niceness(),
-			  'repeat':s.repeat()}
+			  'repeat':s.repeat(),'markov':s.markov(),'mtft':s.mtitsfortat(),'tfnt':s.titforntats()}
 
 	strat_names = list(strats.keys()) #list of all strat names.
 

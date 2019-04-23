@@ -109,6 +109,53 @@ class titfortat():
 	def record(self,opp_move,my_move):
 		self.opp_history.append(opp_move)
 
+# Forgiving tit for tat
+class titforntats():
+	def __init__(self, n = 2):
+		self.title = "titforntats"
+		self.opp_history = []
+		
+		self.n = n
+
+	def decision(self):
+		if len(self.opp_history) == 0:
+			return 0
+		else:
+			if sum(self.opp_history[-1*self.n:]) == self.n:
+				return 1
+			else: 
+				return 0
+			
+
+	def record(self,opp_move,my_move):
+		self.opp_history.append(opp_move)
+
+# Grudge  tit for tat
+class mtitsfortat():
+	def __init__(self, m = 2):
+		self.title = "mtitsfortat"
+		self.opp_history = []
+		
+		self.m = m
+		self.num_def = 0
+
+	def decision(self):
+		if len(self.opp_history) == 0:
+			return 0
+		else:
+			if self.num_def > 0 and self.num_def != self.m:
+				self.num_def += 1
+				return 1
+			else: 
+				self.num_def = 0
+				return 0
+			
+
+	def record(self,opp_move,my_move):
+		self.opp_history.append(opp_move)
+
+
+# Markov based strategy
 class markov():
     def __init__(self,max_chain = 20):
         self.title = "markov"
@@ -118,17 +165,15 @@ class markov():
 
     def decision(self,num = 20):
 
-        # Zip histories together, need to check both opponent's choices and our choices
-        # hist = zip(self.opp_history, self.my_history)
-
         # Get the previous history to compare against
         my_prev = self.my_history[-1*num:]
         opp_prev = self.opp_history[-1*num:]
+
         # Keep track of the possible choices. Will be the opponent's choice following the matching pattern
         choices = []
 
         # Iterate backwards through the history
-        hist_iter = len(self.my_history) - 2
+        hist_iter = len(self.opp_history) - 2
         while hist_iter >= 0:
             i = 0
 
@@ -138,7 +183,11 @@ class markov():
                 # Pattern found
                 if my_prev[-1*i] == self.my_history[hist_iter-i] and opp_prev[-1*i] == self.opp_history[hist_iter-i]:
                     # chance of this option being picked is related to how long of a pattern is matched
-                    choices += [self.opp_history[hist_iter + 1]]
+                    try:
+                        choices += [self.opp_history[hist_iter + 1]]
+                    except:
+                        print(self.opp_history, len(self.opp_history),hist_iter)
+
                     i += 1
                 else: 
                     break
@@ -146,12 +195,14 @@ class markov():
             hist_iter -= 1
                     
 
-        # Randomly pick next move based on the choices already determined
         # No patterns found
         if (len(choices) == 0):
             my_move = 0
+
+        # Randomly pick next move based on the choices already determined
         else:
             my_move = random.choice(choices)
+
         self.my_history.append(my_move)
         return my_move
 
