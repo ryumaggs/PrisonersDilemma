@@ -109,6 +109,53 @@ class titfortat():
 	def record(self,opp_move,my_move):
 		self.opp_history.append(opp_move)
 
+# Forgiving tit for tat
+class titforntats():
+	def __init__(self, n = 2):
+		self.title = "titfortat"
+		self.opp_history = []
+		
+		self.n = n
+
+	def decision(self):
+		if len(self.opp_history) == 0:
+			return 0
+		else:
+			if sum(self.opp_history[-1*self.n:]) == self.n:
+				return 1
+			else: 
+				return 0
+			
+
+	def record(self,opp_move,my_move):
+		self.opp_history.append(opp_move)
+
+# Grudge  tit for tat
+class mtitsfortats():
+	def __init__(self, m = 2):
+		self.title = "titfortat"
+		self.opp_history = []
+		
+		self.m = m
+		self.num_def = 0
+
+	def decision(self):
+		if len(self.opp_history) == 0:
+			return 0
+		else:
+			if self.num_def > 0 and self.num_def != self.m:
+				self.num_def += 1
+				return 1
+			else: 
+				self.num_def = 0
+				return 0
+			
+
+	def record(self,opp_move,my_move):
+		self.opp_history.append(opp_move)
+
+
+# Markov based strategy
 class markov():
     def __init__(self,max_chain = 20):
         self.title = "markov"
