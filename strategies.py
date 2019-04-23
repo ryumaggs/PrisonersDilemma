@@ -112,7 +112,7 @@ class titfortat():
 # Forgiving tit for tat
 class titforntats():
 	def __init__(self, n = 2):
-		self.title = "titfortat"
+		self.title = "titforntats"
 		self.opp_history = []
 		
 		self.n = n
@@ -131,9 +131,9 @@ class titforntats():
 		self.opp_history.append(opp_move)
 
 # Grudge  tit for tat
-class mtitsfortats():
+class mtitsfortat():
 	def __init__(self, m = 2):
-		self.title = "titfortat"
+		self.title = "mtitsfortat"
 		self.opp_history = []
 		
 		self.m = m
@@ -165,12 +165,10 @@ class markov():
 
     def decision(self,num = 20):
 
-        # Zip histories together, need to check both opponent's choices and our choices
-        # hist = zip(self.opp_history, self.my_history)
-
         # Get the previous history to compare against
         my_prev = self.my_history[-1*num:]
         opp_prev = self.opp_history[-1*num:]
+
         # Keep track of the possible choices. Will be the opponent's choice following the matching pattern
         choices = []
 
@@ -193,12 +191,14 @@ class markov():
             hist_iter -= 1
                     
 
-        # Randomly pick next move based on the choices already determined
         # No patterns found
         if (len(choices) == 0):
             my_move = 0
+
+        # Randomly pick next move based on the choices already determined
         else:
             my_move = random.choice(choices)
+
         self.my_history.append(my_move)
         return my_move
 
