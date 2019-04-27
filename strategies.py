@@ -143,12 +143,16 @@ class mtitsfortat():
 		if len(self.opp_history) == 0:
 			return 0
 		else:
-			if self.num_def > 0 and self.num_def != self.m:
-				self.num_def += 1
-				return 1
-			else: 
+			if (self.opp_history[-1] == 0):
+				if self.num_def > 0 and self.num_def != self.m:
+					self.num_def += 1
+					return 1
+				else: 
+					self.num_def = 0
+					return 0
+			else:
 				self.num_def = 0
-				return 0
+				return 1
 			
 
 	def record(self,opp_move,my_move):
@@ -157,57 +161,57 @@ class mtitsfortat():
 
 # Markov based strategy
 class markov():
-    def __init__(self,max_chain = 20):
-        self.title = "markov"
-        self.opp_history = []
-        self.my_history = []
-        self.max_chain = max_chain
+	def __init__(self,max_chain = 20):
+		self.title = "markov"
+		self.opp_history = []
+		self.my_history = []
+		self.max_chain = max_chain
 
-    def decision(self,num = 20):
+	def decision(self,num = 20):
 
-        # Get the previous history to compare against
-        my_prev = self.my_history[-1*num:]
-        opp_prev = self.opp_history[-1*num:]
+		# Get the previous history to compare against
+		my_prev = self.my_history[-1*num:]
+		opp_prev = self.opp_history[-1*num:]
 
-        # Keep track of the possible choices. Will be the opponent's choice following the matching pattern
-        choices = []
+		# Keep track of the possible choices. Will be the opponent's choice following the matching pattern
+		choices = []
 
-        # Iterate backwards through the history
-        hist_iter = len(self.opp_history) - 2
-        while hist_iter >= 0:
-            i = 0
+		# Iterate backwards through the history
+		hist_iter = len(self.opp_history) - 2
+		while hist_iter >= 0:
+			i = 0
 
-            # Find matching patterns
-            while i < num and hist_iter-i >= 0:
-                
-                # Pattern found
-                if my_prev[-1*i] == self.my_history[hist_iter-i] and opp_prev[-1*i] == self.opp_history[hist_iter-i]:
-                    # chance of this option being picked is related to how long of a pattern is matched
-                    try:
-                        choices += [self.opp_history[hist_iter + 1]]
-                    except:
-                        print(self.opp_history, len(self.opp_history),hist_iter)
+			# Find matching patterns
+			while i < num and hist_iter-i >= 0:
+				
+				# Pattern found
+				if my_prev[-1*i] == self.my_history[hist_iter-i] and opp_prev[-1*i] == self.opp_history[hist_iter-i]:
+					# chance of this option being picked is related to how long of a pattern is matched
+					try:
+						choices += [self.opp_history[hist_iter + 1]]
+					except:
+						print(self.opp_history, len(self.opp_history),hist_iter)
 
-                    i += 1
-                else: 
-                    break
+					i += 1
+				else: 
+					break
 
-            hist_iter -= 1
-                    
+			hist_iter -= 1
+					
 
-        # No patterns found
-        if (len(choices) == 0):
-            my_move = 0
+		# No patterns found
+		if (len(choices) == 0):
+			my_move = 0
 
-        # Randomly pick next move based on the choices already determined
-        else:
-            my_move = random.choice(choices)
+		# Randomly pick next move based on the choices already determined
+		else:
+			my_move = random.choice(choices)
 
-        self.my_history.append(my_move)
-        return my_move
+		self.my_history.append(my_move)
+		return my_move
 
-    def record(self, opp_move, my_move):
-        self.opp_history.append(opp_move)
+	def record(self, opp_move, my_move):
+		self.opp_history.append(opp_move)
 
 class DBS():
 	def __init__(self):
@@ -257,6 +261,6 @@ class DBS():
 			p_k_1_denom = 0
 			i = 1
 			while(i < len(move_history)):
-				if move_history[i-1][1] = 'C':
+				if move_history[i-1][1] == 'C':
 					proportion = i/len(move_history)
 					temp_num = proportion*alpha

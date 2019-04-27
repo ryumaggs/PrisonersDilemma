@@ -1,8 +1,12 @@
 import strategies as s
 import sys
+import random
+import statistics
+import matplotlib.pyplot as plt
+import matplotlib.cm as cm
 
 
-def frame(p1,p2,style="normal",num_rounds=100):
+def frame(p1,p2,style="onevone",num_rounds=100, noise1 = 0.1, noise2 = 0.1):
 	if style == "onevone":
 		i = 0
 		p1_points = 0
@@ -11,6 +15,11 @@ def frame(p1,p2,style="normal",num_rounds=100):
 			#print("-------Round " + str(i) + "----------")
 			p1_d = p1.decision()
 			p2_d = p2.decision()
+
+			# Add noise
+			p1_d = p1_d if random.random() > noise1 else 1 - p1_d
+			p2_d = p2_d if random.random() > noise2 else 1 - p2_d
+
 			p1_p,p2_p = points(p1_d,p2_d)
 			p1.record(p2_d,p1_d)
 			p2.record(p1_d,p2_d)
@@ -27,53 +36,74 @@ def frame(p1,p2,style="normal",num_rounds=100):
 
 def points(p1,p2):
 	if p1 == 0 and p2 == 0:
-		return 1,1
+		return 3,3
 	if p1 == 0 and p2 == 1:
-		return 0,2
+		return 0,5
 	if p1 == 1 and p2 == 0:
-		return 2,0
-	return 0,0
+		return 5,0
+	return 1,1
 
 def main():
 	'''please enter all new strats created into the strats dictionary with the name
 	of the strat and s.strat_name()'''
 
 	result = [] # an array of [s1,s2,p1,p2] strat of p1, p2, and point results in a game respectively
-
-
-
+	
 	strats = {'ab':s.alwaysBetray(), 'al':s.alwaysLoyal(), 'tft':s.titfortat(),
 			  'rb':s.randomBetray(), 'grudger':s.grudger(), 'nice':s.niceness(),
 			  'repeat':s.repeat(),'markov':s.markov(),'mtft':s.mtitsfortat(),'tfnt':s.titforntats()}
+	results = {}
+	noises = list(range(0,11,1))
 
 	strat_names = list(strats.keys()) #list of all strat names.
+	for strat in strat_names:
+		results[strat] = [[] for x in noises]
+
 
 	#two for loops to do all possible combinations
 	# j =i at the start of each j loop to prevent redundant pairings
-
 	for i in range(len(strat_names)):
 		for j in range(i,len(strat_names)):
 			p1 = strats[strat_names[i]]   #strat of p1
 			p2 = strats[strat_names[j]]   # strat of p2
 			#print("trying", strat_names[i], " vs ", strat_names[j])
-			result += [[strat_names[i], strat_names[j]] + frame(p1,p2, "onevone")]
+			for noise in noises:
+				res = frame(p1,p2,noise1 = noise/10.0, noise2 = noise/10.0)
+				results[strat_names[i]][noise]+=[res[0]]
+				results[strat_names[j]][noise]+=[res[1]]
+			result += [[strat_names[i], strat_names[j]] + frame(p1,p2, "onevone",)]
+
+	# Get values from each test
+	fig, ax = plt.subplots(figsize=(10,6))
 
 
 
-	'''temp = sys.argv[1:]
-	p1 = strats[temp[0]]
-	p2 = None
-	if "rest" == temp[1]:
-		return
-	else:
-		p2 = strats[temp[1]]
+	NUM_COLORS = len(strats.keys())
 
-	result += [frame(p1,p2, "onevone")]
-	print("Final point tally of " +str(result[0][0])
-		  +" vs " +str(result[0][1]) +" : P1 = " + str(result[0][2]) + "|| P2 = " + str(result[0][3]))'''
-	for i in range(len(result)):
-		print("Result of " + str(result[i][0])
-			  + " vs " + str(result[i][1]) + " : P1 = " + str(result[i][2]) + " || P2 = " + str(result[i][3]))
+	cm = plt.get_cmap('gist_rainbow')
+	ax.set_prop_cycle(color=[cm(i/3*3.0/NUM_COLORS) for i in range(NUM_COLORS)],
+		marker=['.',',','o','v','^','1','2','8','s','p','P','*','h','H','+','x','d'][:NUM_COLORS])
+
+	for strat in strat_names:
+		kwargs = dict(ecolor='k', capsize = 2, elinewidth = 1.1,linewidth=0.6,ms=7)
+		y = [statistics.mean(res) for res in results[strat]]
+		x = [noise/10.0 for noise in noises]
+		yErr = [statistics.pstdev(res) for res in results[strat]]
+		ax.errorbar(x,y,yerr=yErr,**kwargs,label = strat)
+
+		ax.legend(loc='best',frameon=False,ncol=int(len(strats.keys())/2 if len(strats.keys())%2==0 else (len(strats.keys())+1)/2))
+
+		ax.set_title("Prisoner's Dilemma Tournament", fontsize=14)
+		ax.set_xlabel('Noise',fontsize=12)
+		ax.set_ylabel('Score',fontsize=12)
+
+	plt.show()
+
+		 
+
+	# for i in range(len(result)):
+	# 	print("Result of " + str(result[i][0])
+	# 		  + " vs " + str(result[i][1]) + " : P1 = " + str(result[i][2]) + " || P2 = " + str(result[i][3]))
 
 	#print(result)
 main()
