@@ -47,6 +47,8 @@ def main():
 	'''please enter all new strats created into the strats dictionary with the name
 	of the strat and s.strat_name()'''
 
+	rounds = 100
+
 	result = [] # an array of [s1,s2,p1,p2] strat of p1, p2, and point results in a game respectively
 	
 	strats = {'ab':s.alwaysBetray(), 'al':s.alwaysLoyal(), 'tft':s.titfortat(),
@@ -68,15 +70,22 @@ def main():
 			p2 = strats[strat_names[j]]   # strat of p2
 			#print("trying", strat_names[i], " vs ", strat_names[j])
 			for noise in noises:
-				res = frame(p1,p2,noise1 = noise/10.0, noise2 = noise/10.0)
-				results[strat_names[i]][noise]+=[res[0]]
-				results[strat_names[j]][noise]+=[res[1]]
+				res = frame(p1,p2,num_rounds=rounds,noise1 = noise/10.0, noise2 = noise/10.0)
+				results[strat_names[i]][noise]+=[1.0*res[0]/rounds]
+				results[strat_names[j]][noise]+=[1.0*res[1]/rounds]
 			result += [[strat_names[i], strat_names[j]] + frame(p1,p2, "onevone",)]
 
 	# Get values from each test
+	for noise in noises:
+		fig, ax = plt.subplots()
+		boxData = [results[strat][noise] for strat in strat_names]
+		ax.boxplot(boxData)
+		ax.set_xticklabels(strat_names,rotation=45)
+		ax.set_xlabel('Strategy')
+		ax.set_ylabel('Average score')
+		ax.set_title("Prisoner's Dilemma " + str(noise*10) + "% Noise Tournament")
+
 	fig, ax = plt.subplots(figsize=(10,6))
-
-
 
 	NUM_COLORS = len(strats.keys())
 
@@ -93,9 +102,12 @@ def main():
 
 		ax.legend(loc='best',frameon=False,ncol=int(len(strats.keys())/2 if len(strats.keys())%2==0 else (len(strats.keys())+1)/2))
 
-		ax.set_title("Prisoner's Dilemma Tournament", fontsize=14)
-		ax.set_xlabel('Noise',fontsize=12)
-		ax.set_ylabel('Score',fontsize=12)
+	ax.set_title("Prisoner's Dilemma Overall Tournament", fontsize=14)
+	ax.set_xlabel('Noise',fontsize=12)
+	ax.set_ylabel('Score',fontsize=12)
+
+
+
 
 	plt.show()
 
