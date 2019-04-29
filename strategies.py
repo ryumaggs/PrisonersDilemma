@@ -399,8 +399,7 @@ class poke():
 							self.betray_test = True
 							self.betray_tracker = 0
 							return 1
-					else:
-						return 0
+					return 0
 				else:
 					return 1
 			else:
@@ -418,6 +417,8 @@ class poke():
 		#add test phase recording here l0l
 		#FIRST. TO TAKE CARE OF 100% STRATEGIES:
 		#takes care of the first round
+
+		print("00",opp_move,my_move)
 
 		if self.betray_test == True:
 			self.betray_tracker += 1
@@ -517,7 +518,6 @@ class poke():
 		#OK NOW WE HAVE TO TAKE CARE OF PROBABILISTIC ONES
 	def update_schema(self):
 		print("updating schema")
-		alpha = 0.75
 		lead_to_collude = 0
 		lead_to_betray = 0
 		i = 0
@@ -543,12 +543,11 @@ class poke():
 
 
 simple = poke()
-dibbs = DBS()
-rounds = 100
+dibbs = markov()
+rounds = 1000
 p1_points = 0
 p2_points = 0
 for i in range(rounds):
-	dibbs.printall()
 	simple_choice = simple.decision()
 	dibbs_choice = dibbs.decision()
 	if simple_choice == 0 and dibbs_choice == 0:
