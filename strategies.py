@@ -386,13 +386,15 @@ class poke():
 		else:
 			if len(self.move_history) == 0:
 				return 0
+			if self.betray_test == True and self.betray_tracker > 0:
+				return 0
 			last_move = self.move_history[-1]
 			if last_move in self.opponent_strategies:
 				if self.opponent_strategies[last_move] == 0:
 					#if I am not already in the middle of betray testing and my conditions have been met
 					if self.betray_test == False and self.collude_tracker == self.collude_limit:
 						b = random.randint(0,100)
-						if b <= betray_probability * 100:
+						if b <= self.betray_probability * 100:
 							self.collude_tracker = 0
 							self.betray_test = True
 							self.betray_tracker = 0
@@ -542,7 +544,7 @@ class poke():
 
 simple = poke()
 dibbs = DBS()
-rounds = 10
+rounds = 100
 p1_points = 0
 p2_points = 0
 for i in range(rounds):
