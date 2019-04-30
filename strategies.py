@@ -259,10 +259,10 @@ class DBS():
 		self.move_history.append((my_move,opp_move))
 
 		l = list(self.move_history[-1])
-		print("aa",l)
+		# print("aa",l)
 		l_t = tuple(l)
 		l.append(opp_move)
-		print("bb",l)
+		# print("bb",l)
 		t = tuple(l)
 
 		#alternate timeline
@@ -312,7 +312,7 @@ class DBS():
 		#OK NOW WE HAVE TO TAKE CARE OF PROBABILISTIC ONES
 
 	def update_schema(self):
-		print("updating schema")
+		# print("updating schema")
 		alpha = 0.75
 		lead_to_collude = 0
 		lead_to_betray = 0
@@ -322,7 +322,7 @@ class DBS():
 				if self.move_history[i+1][1] == 0:
 					lead_to_collude += 1 * (i/len(self.move_history))
 				else:
-					print("i got betrayed")
+					# print("i got betrayed")
 					lead_to_betray += 1 * (i/len(self.move_history))
 		total = lead_to_collude + lead_to_betray
 		if total > 0:
@@ -359,7 +359,7 @@ class simplePrediction():
 
 class poke():
 	def __init__(self):
-		self.title = "DBS"
+		self.title = "poke"
 		self.move_history = []
 		self.outcome_history = {}
 		self.opponent_schema = {(0,0): 1,(0,1): 1,(1,0): 0,(1,1): 0} #probabilistic
@@ -392,11 +392,13 @@ class poke():
 					#if I am not already in the middle of betray testing and my conditions have been met
 					if self.betray_test == False and self.collude_tracker == self.collude_limit:
 						b = random.randint(0,100)
-						if b <= betray_probability * 100:
+						if b <= self.betray_probability * 100:
 							self.collude_tracker = 0
 							self.betray_test = True
 							self.betray_tracker = 0
 							return 1
+						else:
+							return 0
 					else:
 						return 0
 				else:
@@ -461,10 +463,10 @@ class poke():
 		self.move_history.append((my_move,opp_move))
 
 		l = list(self.move_history[-1])
-		print("aa",l)
+		# print("aa",l)
 		l_t = tuple(l)
 		l.append(opp_move)
-		print("bb",l)
+		# print("bb",l)
 		t = tuple(l)
 
 		#alternate timeline
@@ -514,7 +516,7 @@ class poke():
 			return 1
 		#OK NOW WE HAVE TO TAKE CARE OF PROBABILISTIC ONES
 	def update_schema(self):
-		print("updating schema")
+		# print("updating schema")
 		alpha = 0.75
 		lead_to_collude = 0
 		lead_to_betray = 0
@@ -524,7 +526,7 @@ class poke():
 				if self.move_history[i+1][1] == 0:
 					lead_to_collude += 1 * (i/len(self.move_history))
 				else:
-					print("i got betrayed")
+					# print("i got betrayed")
 					lead_to_betray += 1 * (i/len(self.move_history))
 		total = lead_to_collude + lead_to_betray
 		if total > 0:
@@ -540,23 +542,23 @@ class poke():
 
 
 
-simple = poke()
-dibbs = DBS()
-rounds = 10
-p1_points = 0
-p2_points = 0
-for i in range(rounds):
-	dibbs.printall()
-	simple_choice = simple.decision()
-	dibbs_choice = dibbs.decision()
-	if simple_choice == 0 and dibbs_choice == 0:
-		p1_points += 1
-		p2_points += 1
-	elif simple_choice == 1 and dibbs_choice == 0:
-		p1_points += 2
-	elif dibbs_choice == 1 and simple_choice == 0:
-		p2_points += 2
+# simple = poke()
+# dibbs = DBS()
+# rounds = 10
+# p1_points = 0
+# p2_points = 0
+# for i in range(rounds):
+# 	dibbs.printall()
+# 	simple_choice = simple.decision()
+# 	dibbs_choice = dibbs.decision()
+# 	if simple_choice == 0 and dibbs_choice == 0:
+# 		p1_points += 1
+# 		p2_points += 1
+# 	elif simple_choice == 1 and dibbs_choice == 0:
+# 		p1_points += 2
+# 	elif dibbs_choice == 1 and simple_choice == 0:
+# 		p2_points += 2
 
-	print("Current score: ", p1_points, p2_points)
-	simple.record(dibbs_choice,simple_choice)
-	dibbs.record(simple_choice,dibbs_choice)
+# 	print("Current score: ", p1_points, p2_points)
+# 	simple.record(dibbs_choice,simple_choice)
+# 	dibbs.record(simple_choice,dibbs_choice)

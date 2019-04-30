@@ -47,17 +47,19 @@ def main():
 	'''please enter all new strats created into the strats dictionary with the name
 	of the strat and s.strat_name()'''
 
-	rounds = 100
+	rounds = 200
 
 	result = [] # an array of [s1,s2,p1,p2] strat of p1, p2, and point results in a game respectively
 	
 	strats = {'ab':s.alwaysBetray(), 'al':s.alwaysLoyal(), 'tft':s.titfortat(),
 			  'rb':s.randomBetray(), 'grudger':s.grudger(), 'nice':s.niceness(),
-			  'repeat':s.repeat(),'markov':s.markov(),'mtft':s.mtitsfortat(),'tfnt':s.titforntats()}
+			  'repeat':s.repeat(),'markov':s.markov(),'mtft':s.mtitsfortat(),'tfnt':s.titforntats(),
+			  'dbs':s.DBS(),'simple':s.simplePrediction(),'poke':s.poke()}
 	results = {}
 	noises = list(range(0,11,1))
 
 	strat_names = list(strats.keys()) #list of all strat names.
+	strat_names.sort()
 	for strat in strat_names:
 		results[strat] = [[] for x in noises]
 
@@ -90,21 +92,25 @@ def main():
 	NUM_COLORS = len(strats.keys())
 
 	cm = plt.get_cmap('gist_rainbow')
-	ax.set_prop_cycle(color=[cm(i/3*3.0/NUM_COLORS) for i in range(NUM_COLORS)],
+	ax.set_prop_cycle(color=['#800000','#9A6324','#808000','#469990','#000075','#000000','#e6194B',
+		'#f58231','#ffe119','#bfef45','#3cb44b','#42d4f4','#4363d8','#911eb4','f032e6','#a9a9a9',
+		'#fabebe','#ffd8b1','#fffac8','#aaffc3','#e6beff'][:NUM_COLORS],
 		marker=['.',',','o','v','^','1','2','8','s','p','P','*','h','H','+','x','d'][:NUM_COLORS])
 
 	for strat in strat_names:
-		kwargs = dict(ecolor='k', capsize = 2, elinewidth = 1.1,linewidth=0.6,ms=7)
+		kwargs = dict(ecolor='k', capsize = 2, elinewidth = 1.1,linewidth=3,ms=7)
 		y = [statistics.mean(res) for res in results[strat]]
 		x = [noise/10.0 for noise in noises]
 		yErr = [statistics.pstdev(res) for res in results[strat]]
 		ax.errorbar(x,y,yerr=yErr,**kwargs,label = strat)
 
-		ax.legend(loc='best',frameon=False,ncol=int(len(strats.keys())/2 if len(strats.keys())%2==0 else (len(strats.keys())+1)/2))
+		ax.legend(loc='best',frameon=False,ncol=len(strat_names))
 
 	ax.set_title("Prisoner's Dilemma Overall Tournament", fontsize=14)
 	ax.set_xlabel('Noise',fontsize=12)
 	ax.set_ylabel('Score',fontsize=12)
+
+	plt.ylim(0,5)
 
 
 
