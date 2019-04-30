@@ -399,14 +399,10 @@ class poke():
 							self.betray_test = True
 							self.betray_tracker = 0
 							return 1
-<<<<<<< HEAD
 						else:
 							return 0
 					else:
 						return 0
-=======
-					return 0
->>>>>>> 9f3148b9338cd03be81bc4c9c4e52f667e9105fd
 				else:
 					return 1
 			else:
@@ -425,7 +421,7 @@ class poke():
 		#FIRST. TO TAKE CARE OF 100% STRATEGIES:
 		#takes care of the first round
 
-		print("00",opp_move,my_move)
+		# print("00",opp_move,my_move)
 
 		if self.betray_test == True:
 			self.betray_tracker += 1
@@ -524,12 +520,9 @@ class poke():
 			return 1
 		#OK NOW WE HAVE TO TAKE CARE OF PROBABILISTIC ONES
 	def update_schema(self):
-<<<<<<< HEAD
+
 		# print("updating schema")
 		alpha = 0.75
-=======
-		print("updating schema")
->>>>>>> 9f3148b9338cd03be81bc4c9c4e52f667e9105fd
 		lead_to_collude = 0
 		lead_to_betray = 0
 		i = 0
@@ -553,46 +546,3 @@ class poke():
 		print("")
 
 
-
-<<<<<<< HEAD
-# simple = poke()
-# dibbs = DBS()
-# rounds = 10
-# p1_points = 0
-# p2_points = 0
-# for i in range(rounds):
-# 	dibbs.printall()
-# 	simple_choice = simple.decision()
-# 	dibbs_choice = dibbs.decision()
-# 	if simple_choice == 0 and dibbs_choice == 0:
-# 		p1_points += 1
-# 		p2_points += 1
-# 	elif simple_choice == 1 and dibbs_choice == 0:
-# 		p1_points += 2
-# 	elif dibbs_choice == 1 and simple_choice == 0:
-# 		p2_points += 2
-
-# 	print("Current score: ", p1_points, p2_points)
-# 	simple.record(dibbs_choice,simple_choice)
-# 	dibbs.record(simple_choice,dibbs_choice)
-=======
-simple = poke()
-dibbs = markov()
-rounds = 1000
-p1_points = 0
-p2_points = 0
-for i in range(rounds):
-	simple_choice = simple.decision()
-	dibbs_choice = dibbs.decision()
-	if simple_choice == 0 and dibbs_choice == 0:
-		p1_points += 1
-		p2_points += 1
-	elif simple_choice == 1 and dibbs_choice == 0:
-		p1_points += 2
-	elif dibbs_choice == 1 and simple_choice == 0:
-		p2_points += 2
-
-	print("Current score: ", p1_points, p2_points)
-	simple.record(dibbs_choice,simple_choice)
-	dibbs.record(simple_choice,dibbs_choice)
->>>>>>> 9f3148b9338cd03be81bc4c9c4e52f667e9105fd
